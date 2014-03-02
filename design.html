@@ -5,15 +5,20 @@
     <link href="style.css" rel="stylesheet"/>
 </head>
 <body>
-<h2>CSS3 Timeline</h2>
+<div id="overlay">
+    <span class="glow logo">GitHup</span>
+    <span class="tagline">Home to the world's greatest commits.</span>
 
-<p>Please set the $vertical variable to false to see the horizontal version.</p>
+    <div class="footer">
+        <a href="#" id="next" class="glow pull-right m-btn big">next</a>
+        <a href="#" id="back" class="glow pull-right m-btn big disabled">back</a>
+    </div>
+</div>
 <ul id='timeline'>
 </ul>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script>
 <script src="jquery.mousewheel.js"></script>
-<script src="jquery.scrollintoview.js"></script>
-<script src="jquery.waypoints.js"></script>
+<script src="jquery.scrollTo.js"></script>
 <script src="http://builds.handlebarsjs.com.s3.amazonaws.com/handlebars-v1.3.0.js"></script>
 <script>
     function shuffle(o) { //v1.0
@@ -25,93 +30,148 @@
             <div class='relative'>\
             <label for='{{hash}}'>{{message}}</label>\
     <span class='date'>{{time}} hours ago</span>\
-    <span class='circle'></span>\
+    <span class='circle'>\
+        <img class='icon-48' alt='{{author.username}}' src='{{author.imageUrl}}'/>\
+    </span>\
     </div>\
     <div class='content'>\
             <p>\
-            <a href='{{author.url}}'>\
-            <img class='img-responsive pull-right icon-64' alt='{{author.username}}' src='{{author.imageUrl}}'/>\
-            </a>\
     <a href='{{author.url}}'>{{author.username}}</a> pushed to <a href='{{repo.url}}'>{{repo.name}}</a>\
     <br>\
-    <a href='{{url}}'>{{ hash }}</a>\
+    <a href='{{url}}'>{{ hash }}</a> <code>{{message}}</code>\
     </p></div></li>";
     var template = Handlebars.compile(postTemplate);
     var $tl = $('#timeline');
     var activatedPos = null;
-    var busy = false;
+    var scrollBusy = false;
 
     var freeCB = function () {
         setTimeout(function () {
-            busy = false;
-        }, 180);
+            scrollBusy = false;
+        }, 100);
     };
 
     function activate($el) {
         $('.active').removeClass('active');
-        $el.addClass('active').scrollintoview({direction: 'horizontal', 'complete': freeCB});
+        $el.addClass('active');
         activatedPos = $el.index(); // TODO this line is potentially confusing
+        hue = ((activatedPos * 3) + 120) % 256;
+        $('body').css('background', 'hsl(' + hue + ', 30%, 33%)');
+        $('.logo').css('color', 'hsl(' + hue + ', 30%, 33%)');
+
+        if (activatedPos === 0) {
+            $('#back').addClass('disabled');
+        }
+        else {
+            $('#back').removeClass('disabled');
+        }
+        if (activatedPos === $tl.find('li').length - 1) {
+            $('#next').addClass('disabled');
+        }
+        else {
+            $('#next').removeClass('disabled');
+        }
+        $.scrollTo($el, 600, {margin: true, over: {'left': -0.7}, axis: 'x', onAfter: freeCB, easing: 'swing'});
     }
     function activateId(position) {
         return activate($tl.find('li').eq(position));
     }
 
+    function tlForward() {
+        if (activatedPos === null) {
+            return activateId(0);
+        }
+        if (activatedPos >= 0 && activatedPos < $tl.find('li').length - 1) {
+            return activateId(activatedPos + 1);
+        }
+        else {
+            return false;
+        }
+    }
+
+    function tlBackward() {
+        if (activatedPos === null) {
+            return activateId(0);
+        }
+        if (activatedPos > 0 && activatedPos < $tl.find('li').length) {
+            return activateId(activatedPos - 1);
+        }
+        else {
+            return false;
+        }
+    }
+
     $("body").mousewheel(function (event, delta) {
-        if (busy) {
+        if (scrollBusy) {
             return event.preventDefault();
         }
-        busy = true;
+        scrollBusy = true;
         if (activatedPos === null) {
-            newPos = 0;
+            activateId(0);
         }
         else {
             if (delta > 0) {
-                newPos = activatedPos - 1;
+                tlBackward();
+            }
+            else if (delta < 0) {
+                tlForward();
             }
             else {
-                newPos = activatedPos + 1;
+                scrollBusy = false;
             }
-        }
-        console.log("newPos is %d", newPos);
-        if (newPos >= 0 && newPos < $('li').length) {
-            activateId(newPos);
-        }
-        else {
-            busy = false;
         }
 //        this.scrollLeft -= (delta * 30);
         event.preventDefault();
-
     });
 
     var activateCb = function () {
         activate($(this));
     };
 
-    $('li').click(activateCb);
-
     //    $('li').waypoint(activateCb, {horizontal:true, offset:'bottom-in-view'});
 
-    $.getJSON('http://cloud.rozu.co:9080/githup', function (result) {
-        data = shuffle(result);
-        var time = 2;
-        for (var i = 0; i < data.length; i++) {
-            if (Math.random() > 0.9) {
-                time++;
+    var loadData = function () {
+        $.getJSON('http://cloud.rozu.co:9080/githup', function (result) {
+            data = shuffle(result);
+            var time = 2;
+            for (var i = 0; i < data.length; i++) {
+                if (Math.random() > 0.9) {
+                    time++;
+                }
+                var datum = data[i];
+
+                repoUrl = datum.url.split('/compare/')[0];
+                repoName = repoUrl.split('https://github.com/')[1];
+                datum.repo = {name: repoName, url: repoUrl};
+                datum.hash = datum.url.split('...')[1];
+                datum.time = time;
+
+                var $el = $(template(datum)).click(activateCb);
+                $('#timeline').append($el);
             }
-            var datum = data[i];
+            $('li').fadeIn();
+            $.scrollTo('100%', 0);
+            $.scrollTo('0%', 5000);
+        });
+    }
 
-            repoUrl = datum.url.split('/compare/')[0];
-            repoName = repoUrl.split('https://github.com/')[1];
-            datum.repo = {name: repoName, url: repoUrl};
-            datum.hash = datum.url.split('...')[1];
-            datum.time = time;
+    $('#next').click(tlForward);
+    $('#back').click(tlBackward);
 
-            var html = template(datum);
-            $('#timeline').append(html);
-        }
-    });
-
+    // animation code
+    $('li').hide();
+    $('ul').hide()
+            .css({'margin-left': 'auto',
+                'margin-right': 'auto',
+                'border-top-width': '8px',
+                'border-spacing': '0' })
+            .show()
+            .animate({'min-width': "100%"}, 2500)
+            .animate({'border-top-width': '2px'}, 500, loadData)
+            .animate({'margin-left': '0',
+                'margin-right': '100px',
+                'border-spacing': '100px 0'}, 0);
+    // size of border to be bigger
 
 </script>
 </body>
