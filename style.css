@@ -23,14 +23,15 @@ h2 {
  * ------------------------------------- */
 #timeline {
     list-style: none;
-    margin: 120px 0 0;
-    padding: 0;
+    margin: 120px 100px 0 0;
+    padding: 0 0 0 75%;
     border-top: 8px solid #eee9dc;
     display: table;
-    border-spacing: 30px 0;
+    border-spacing: 300px 0;
 }
 #timeline li {
     display: table-cell;
+    padding: 0 30px;
 }
 #timeline li .relative {
     position: relative;
@@ -51,25 +52,25 @@ h2 {
 
 .circle {
     margin: 0 auto;
-    top: -14px;
+    top: -20px;
     left: 0;
     right: 0;
-    width: 10px;
-    height: 10px;
+    width: 16px;
+    height: 16px;
     background: #48b379;
-    border: 5px solid #eee9dc;
+    border: 8px solid #eee9dc;
     border-radius: 50%;
     display: block;
     position: absolute;
 }
 
 .content {
-    width: 200px;
+    width: 360px;
     max-height: 0;
     margin-top: 40px;
     vertical-align: top;
     padding: 50px 15px 15px;
-    transition: width 0.4s linear, max-height 0.4s linear;
+    transition: width 0.4s ease, max-height 0.4s ease;
     border-width: 2px;
     border-style: solid;
     border-radius: 0.5em;
@@ -110,7 +111,7 @@ label {
     position: absolute;
     z-index: 100;
     cursor: pointer;
-    width: 200px;
+    width: 360px;
     white-space: nowrap;
     text-overflow: ellipsis;
     overflow: hidden;
@@ -123,22 +124,49 @@ label {
     display: none;
 }
 
-.radio:checked + .relative label {
+.active .relative label {
     cursor: auto;
     width: 600px;
     padding-right: 15px;
-    transition: width 0.3s linear 0.2s;
+    transition: width 0.3s ease 0.2s;
 }
-.radio:checked + .relative .circle {
+
+.active .relative .circle {
     background: #f98262;
 }
-.radio:checked ~ .content {
+
+.active .content {
     max-height: 360px;
     border-color: #eee9dc;
     width: 600px;
 }
-.radio:checked ~ .content p {
+
+.active .content p {
     max-height: 100%;
     color: #eee9dc;
     transition: color 0.3s linear 0.3s;
+}
+
+/* Image Stuff */
+.img-responsive {
+    max-width: 100%;
+    height: auto;
+}
+
+.pull-left {
+    float: left !important;
+}
+
+.pull-right {
+    float: right !important;
+}
+
+.icon-32 {
+    height: 32px;
+    width: 32px;
+}
+
+.icon-64 {
+    height: 64px;
+    width: 64px;
 }
