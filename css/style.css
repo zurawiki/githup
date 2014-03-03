@@ -1,0 +1,276 @@
+/* -------------------------------------
+ * General Style
+ * ------------------------------------- */
+@import url(http://fonts.googleapis.com/css?family=Source+Sans+Pro:400);
+@import url(http://fonts.googleapis.com/css?family=Lobster+Two:700);
+
+html {
+    height: 100%;
+    overflow-y: hidden;
+}
+
+body {
+    margin: 0;
+    font-size: 100%;
+    font-family: "Source Sans Pro", sans-serif;
+    color: #eee9dc;
+    background: hsl(120, 30%, 33%);
+}
+
+a {
+    text-decoration: none;
+    color: white;
+    font-weight: bolder;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+.logo {
+    font-family: 'Lobster Two', cursive;
+    position: fixed;
+    top: 60px;
+    left: 0;
+    font-size: 80px;
+    background-color: #eee9dc;
+    color: hsl(120, 30%, 33%);
+    padding: 0 25px 5px 100px;
+}
+
+.glow {
+    opacity: 0.7;
+    transition: opacity 0.5s ease;
+}
+
+.glow:hover {
+    opacity: 1;
+}
+
+.tagline {
+    font-family: 'Lobster Two', cursive;
+    position: fixed;
+    top: 170px;
+    left: 100px;
+    color: #eee9dc;
+    font-size: medium;
+}
+
+.footer {
+    position: fixed;
+    bottom: 10px;
+    width: 95%;
+    right: 10px;
+    font-size: xx-large;
+}
+
+.footer > .m-btn {
+    margin-right: 20px;
+}
+
+/* -------------------------------------
+ * timeline
+ * ------------------------------------- */
+#timeline {
+    list-style: none;
+    margin: 360px 100px 0 0;
+    padding: 0;
+    border-top: 2px solid #eee9dc;
+    display: table;
+    border-spacing: 100px 0;
+}
+#timeline li {
+    display: table-cell;
+    padding: 0;
+    transition: padding-left 1.2s ease, padding-right 1.2s ease
+}
+
+#timeline li.active {
+    padding: 0 160px;
+}
+
+#timeline li .relative {
+    position: relative;
+}
+#timeline p {
+    margin: 0 0 15px;
+}
+
+.date {
+    text-align: center;
+    top: -55px;
+    left: 0;
+    right: 0;
+    font-size: 0.95em;
+    line-height: 20px;
+    position: absolute;
+}
+
+.circle {
+    margin: 0 auto;
+    top: -28px;
+    left: 0;
+    right: 0;
+    width: 48px;
+    height: 48px;
+    background: #eee9dc;
+    border: 2px solid #eee9dc;
+    border-radius: 50%;
+    display: block;
+    position: absolute;
+    overflow: hidden;
+}
+
+.content {
+    width: 360px;
+    max-height: 0;
+    margin-top: 40px;
+    vertical-align: top;
+    padding: 50px 15px 15px;
+    transition: width 0.4s ease, max-height 0.4s ease;
+    border-width: 2px;
+    border-style: solid;
+    border-radius: 0.5em;
+    position: relative;
+}
+
+.content:before, .content:after {
+    content: "";
+    width: 0;
+    height: 0;
+    border: solid transparent;
+    position: absolute;
+    pointer-events: none;
+    bottom: 100%;
+}
+
+.content:before {
+    border-bottom-color: inherit;
+    border-width: 5px;
+    left: 50%;
+    margin-left: -5px;
+}
+
+.content:after {
+    border-bottom-color: #eee9dc;
+    border-width: 10px;
+    left: 50%;
+    margin-left: -10px;
+}
+
+.content p, .content a {
+    max-height: 0;
+    color: transparent;
+    text-align: left;
+    word-break: break-word;
+    hyphens: auto;
+    overflow: hidden;
+}
+
+label {
+    font-size: 2em;
+    position: absolute;
+    z-index: 100;
+    cursor: pointer;
+    width: 360px;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    display: block;
+    top: 53px;
+    left: 15px;
+    transition: width 0.3s ease 0.2s;
+}
+
+.radio {
+    display: none;
+}
+
+.active .relative label {
+    cursor: auto;
+    padding-right: 15px;
+}
+
+.active .relative .circle {
+    background: #eee9dc;
+}
+
+.active .content {
+    max-height: 360px;
+    border-color: #eee9dc;
+
+}
+
+.active .content p, .active .content a {
+    max-height: 100%;
+    color: #eee9dc;
+    transition: color 0.3s linear 0.3s;
+}
+
+/* Image Stuff */
+.img-responsive {
+    max-width: 100%;
+    height: auto;
+}
+
+.pull-left {
+    float: left !important;
+}
+
+.pull-right {
+    float: right !important;
+}
+
+.icon-48 {
+    height: 48px;
+    width: 48px;
+}
+
+.icon-64 {
+    height: 64px;
+    width: 64px;
+}
+
+/* icons */
+
+@font-face {
+    font-family: 'icomoon';
+    src: url('../fonts/icomoon.eot?hv53ru');
+    src: url('../fonts/icomoon.eot?#iefixhv53ru') format('embedded-opentype'), url('../fonts/icomoon.woff?hv53ru') format('woff'), url('../fonts/icomoon.ttf?hv53ru') format('truetype'), url('../fonts/icomoon.svg?hv53ru#icomoon') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+
+[class^="icon-"], [class*=" icon-"] {
+    font-family: 'icomoon';
+    speak: none;
+    font-style: normal;
+    font-weight: normal;
+    font-variant: normal;
+    text-transform: none;
+    line-height: 1;
+
+    /* Better Font Rendering =========== */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-arrow-left:before {
+    content: "\e600";
+    float: left;
+}
+
+.icon-arrow-right:before {
+    content: "\e601";
+    float: right;
+}
+
+i {
+    font-size: 48px;
+    margin: 10px 2px;
+    display: none;
+}
+
+.active i {
+    display: block;
+}
