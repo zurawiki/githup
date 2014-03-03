@@ -1,7 +1,7 @@
 /* -------------------------------------
  * General Style
  * ------------------------------------- */
-@import url(http://fonts.googleapis.com/css?family=Source+Sans+Pro:400);
+@import url(http://fonts.googleapis.com/css?family=Source+Sans+Pro:300,600);
 @import url(http://fonts.googleapis.com/css?family=Lobster+Two:700);
 
 html {
@@ -13,6 +13,7 @@ body {
     margin: 0;
     font-size: 100%;
     font-family: "Source Sans Pro", sans-serif;
+    font-weight: 300;
     color: #eee9dc;
     background: hsl(120, 30%, 33%);
 }
@@ -20,11 +21,19 @@ body {
 a {
     text-decoration: none;
     color: white;
-    font-weight: bolder;
+    font-weight: 600;
 }
 
 a:hover {
     text-decoration: underline;
+}
+
+p {
+    margin: 5px 0;
+}
+
+code {
+    margin-left: 5px;
 }
 
 .logo {
@@ -92,9 +101,6 @@ a:hover {
 #timeline li .relative {
     position: relative;
 }
-#timeline p {
-    margin: 0 0 15px;
-}
 
 .date {
     text-align: center;
@@ -126,10 +132,9 @@ a:hover {
     max-height: 0;
     margin-top: 40px;
     vertical-align: top;
-    padding: 50px 15px 15px;
+    padding: 10px 15px 55px;
     transition: width 0.4s ease, max-height 0.4s ease;
-    border-width: 2px;
-    border-style: solid;
+    border: 2px solid #eee9dc;
     border-radius: 0.5em;
     position: relative;
 }
@@ -169,7 +174,6 @@ a:hover {
 
 label {
     font-size: 2em;
-    position: absolute;
     z-index: 100;
     cursor: pointer;
     width: 360px;
@@ -177,8 +181,13 @@ label {
     text-overflow: ellipsis;
     overflow: hidden;
     display: block;
-    top: 53px;
-    left: 15px;
+    transition: width 0.3s ease 0.2s;
+}
+
+.active label {
+    white-space: normal;
+    text-overflow: ellipsis;
+    display: block;
     transition: width 0.3s ease 0.2s;
 }
 
@@ -198,7 +207,7 @@ label {
 .active .content {
     max-height: 360px;
     border-color: #eee9dc;
-
+    padding-bottom: 15px;
 }
 
 .active .content p, .active .content a {
@@ -265,12 +274,17 @@ label {
     float: right;
 }
 
-i {
+.icon-arrow-left, .icon-arrow-right {
     font-size: 48px;
     margin: 10px 2px;
     display: none;
 }
 
-.active i {
+.active .icon-arrow-left, .active .icon-arrow-right {
     display: block;
+}
+
+li:first-child .icon-arrow-left,
+li:last-child .icon-arrow-right {
+    display: none !important;
 }

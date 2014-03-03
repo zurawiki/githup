@@ -7,21 +7,20 @@ function shuffle(o) { //v1.0
     return o;
 }
 var postTemplate = "<li class='work'>\
-            <input class='radio' id='{{hash}}' name='works' type='radio'>\
-            <div class='relative'>\
-            <label for='{{hash}}'>{{message}}</label>\
-    <span class='date' data-date='{{date}}'>{{prettyDate}}</span>\
+<div class='relative'>\
+    <span class='date' title='{{date}}'>{{prettyDate}}</span>\
     <span class='circle'>\
         <img class='icon-48' alt='{{author.username}}' src='{{author.imageUrl}}'/>\
     </span>\
     </div>\
     <div class='content'>\
-            <p>\
+        <label>{{message}}</label>\
+        <p>\
     <a href='{{author.url}}'>{{author.username}}</a> pushed to <a href='{{repo.url}}'>{{repo.name}}</a>\
-    <br>\
-    <a href='{{url}}'>{{ hash }}</a> <code>{{message}}</code>\
+    </p><p>\
+    <a href='{{url}}'>{{ hash }}</a><code>{{message}}</code>\
     </p></div>\
-    <i class='glow icon-arrow-left'></i><i class='glow icon-arrow-right'></i></li>";
+    <a href='#' class='glow icon-arrow-left'></a><a href='#' class='glow icon-arrow-right'></a></li>";
 var template = Handlebars.compile(postTemplate);
 var $tl = $('#timeline');
 var activatedPos = null;
@@ -37,6 +36,7 @@ function activate($el) {
     $('.active').removeClass('active');
     $el.addClass('active');
     activatedPos = $el.index(); // TODO this line is potentially confusing
+    console.log('activated pos %d', activatedPos);
     hue = ((activatedPos * 3) + 120) % 256;
     $('body').css('background', 'hsl(' + hue + ', 30%, 33%)');
     $('.logo').css('color', 'hsl(' + hue + ', 30%, 33%)');
@@ -58,6 +58,12 @@ function activate($el) {
 function activateId(position) {
     return activate($tl.find('li').eq(position));
 }
+var only = function (cb) {
+    return function (event) {
+        event.stopPropagation();
+        return cb();
+    }
+}
 
 function tlForward() {
     if (activatedPos === null) {
@@ -66,9 +72,7 @@ function tlForward() {
     if (activatedPos >= 0 && activatedPos < $tl.find('li').length - 1) {
         return activateId(activatedPos + 1);
     }
-    else {
-        return false;
-    }
+    return false;
 }
 
 function tlBackward() {
@@ -78,9 +82,7 @@ function tlBackward() {
     if (activatedPos > 0 && activatedPos < $tl.find('li').length) {
         return activateId(activatedPos - 1);
     }
-    else {
-        return false;
-    }
+    return false;
 }
 
 $("body").mousewheel(function (event, delta) {
@@ -106,7 +108,7 @@ $("body").mousewheel(function (event, delta) {
     event.preventDefault();
 });
 
-var activateCb = function () {
+var activateCb = function (event) {
     activate($(this));
 };
 
@@ -128,17 +130,18 @@ var loadData = function () {
             datum.time = time;
             datum.prettyDate = moment(datum.date).fromNow();
 
-            var $el = $(template(datum)).click(activateCb);
+            var $el = $(template(datum));
+            $el.click(activateCb);
             $('#timeline').append($el);
         }
+        $('.icon-arrow-right').click(only(tlForward));
+        $('.icon-arrow-left').click(only(tlBackward));
         $('li').fadeIn();
         $.scrollTo('100%', 0);
         $.scrollTo('0%', 5000);
     });
 }
 
-$('#next').click(tlForward);
-$('#back').click(tlBackward);
 
 // animation code
 $('li').hide();
