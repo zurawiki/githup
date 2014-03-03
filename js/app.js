@@ -53,7 +53,11 @@ function activate($el) {
     else {
         $('#next').removeClass('disabled');
     }
-    $.scrollTo($el, 600, {margin: true, over: {'left': -0.7}, axis: 'x', onAfter: freeCB, easing: 'swing'});
+    var windowW = $(window).width();
+    var activeW = 714, normalW = 494;
+    var offset = 100 + (activeW / 2) - (windowW / 2);
+
+    $.scrollTo(offset + activatedPos * normalW, 500, {axis: 'x', onAfter: freeCB, easing: 'swing'});
 }
 function activateId(position) {
     return activate($tl.find('li').eq(position));
