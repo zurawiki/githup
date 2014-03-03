@@ -32,11 +32,17 @@ var freeCB = function () {
     }, 100);
 };
 
+function scrollToId(id, time) {
+    var windowW = $(window).width();
+    var activeW = 714, normalW = 494;
+    var offset = 100 + (activeW / 2) - (windowW / 2);
+
+    $.scrollTo(offset + id * normalW, time, {axis: 'x', onAfter: freeCB, easing: 'swing'});
+}
 function activate($el) {
     $('.active').removeClass('active');
     $el.addClass('active');
     activatedPos = $el.index(); // TODO this line is potentially confusing
-    console.log('activated pos %d', activatedPos);
     hue = ((activatedPos * 3) + 120) % 256;
     $('body').css('background', 'hsl(' + hue + ', 30%, 33%)');
     $('.logo').css('color', 'hsl(' + hue + ', 30%, 33%)');
@@ -53,11 +59,7 @@ function activate($el) {
     else {
         $('#next').removeClass('disabled');
     }
-    var windowW = $(window).width();
-    var activeW = 714, normalW = 494;
-    var offset = 100 + (activeW / 2) - (windowW / 2);
-
-    $.scrollTo(offset + activatedPos * normalW, 500, {axis: 'x', onAfter: freeCB, easing: 'swing'});
+    scrollToId(activatedPos, 500);
 }
 function activateId(position) {
     return activate($tl.find('li').eq(position));
@@ -116,33 +118,47 @@ var activateCb = function (event) {
     activate($(this));
 };
 
-//    $('li').waypoint(activateCb, {horizontal:true, offset:'bottom-in-view'});
+var forLater = [];
+
+function createItem(datum) {
+    repoUrl = datum.url.split('/compare/')[0];
+    repoName = repoUrl.split('https://github.com/')[1];
+    datum.repo = {name: repoName, url: repoUrl};
+    datum.hash = datum.url.split('...')[1];
+    datum.prettyDate = moment(datum.date).add("days", 1).fromNow();
+
+    return $(template(datum)).click(activateCb);
+}
+
+var addLater = function () {
+    if (forLater != []) {
+        datum = forLater.pop();
+        var $el = createItem(datum);
+        $('#timeline').prepend($el);
+        scrollToId(++activatedPos, 0);
+        activateId(activatedPos);
+
+        setTimeout(addLater, (Math.random() * 60 + 10) * 1000);
+    }
+}
 
 var loadData = function () {
     $.getJSON('http://cloud.rozu.co:9080/githup', function (data) {
-        var time = 2;
+        // Split the array, some for now, more for later
+        var half_length = Math.floor(data.length / 2);
+        forLater = data.splice(0, half_length);
+
         for (var i = 0; i < data.length; i++) {
-            if (Math.random() > 0.9) {
-                time++;
-            }
-            var datum = data[i];
-
-            repoUrl = datum.url.split('/compare/')[0];
-            repoName = repoUrl.split('https://github.com/')[1];
-            datum.repo = {name: repoName, url: repoUrl};
-            datum.hash = datum.url.split('...')[1];
-            datum.time = time;
-            datum.prettyDate = moment(datum.date).fromNow();
-
-            var $el = $(template(datum));
-            $el.click(activateCb);
+            var $el = createItem(data[i]);
             $('#timeline').append($el);
         }
         $('.icon-arrow-right').click(only(tlForward));
         $('.icon-arrow-left').click(only(tlBackward));
         $('li').fadeIn();
         $.scrollTo('100%', 0);
-        $.scrollTo('0%', 5000);
+        $.scrollTo(0, 5000);
+        activateId(0);
+        setTimeout(addLater, Math.random() * 60 * 1000);
     });
 }
 
