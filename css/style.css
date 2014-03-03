@@ -91,7 +91,7 @@ code {
 #timeline li {
     display: table-cell;
     padding: 0;
-    transition: padding-left 1.2s ease, padding-right 1.2s ease
+    transition: padding-left 1s ease, padding-right 1s ease;
 }
 
 #timeline li.active {
@@ -133,7 +133,7 @@ code {
     margin-top: 40px;
     vertical-align: top;
     padding: 10px 15px 55px;
-    transition: width 0.4s ease, max-height 0.4s ease;
+    transition: width 0.5s ease, max-height 0.5s ease;
     border: 2px solid #eee9dc;
     border-radius: 0.5em;
     position: relative;
@@ -181,23 +181,14 @@ label {
     text-overflow: ellipsis;
     overflow: hidden;
     display: block;
-    transition: width 0.3s ease 0.2s;
+    transition: width 0.3s ease 0.5s;
 }
 
 .active label {
     white-space: normal;
     text-overflow: ellipsis;
     display: block;
-    transition: width 0.3s ease 0.2s;
-}
-
-.radio {
-    display: none;
-}
-
-.active .relative label {
-    cursor: auto;
-    padding-right: 15px;
+    transition: width 0.5s ease;
 }
 
 .active .relative .circle {
@@ -213,7 +204,7 @@ label {
 .active .content p, .active .content a {
     max-height: 100%;
     color: #eee9dc;
-    transition: color 0.3s linear 0.3s;
+    transition: color 0.5s ease;
 }
 
 /* Image Stuff */

@@ -49,7 +49,7 @@ request(url, function (err, resp, body) {
     };
 
     var fetchWait = function (url, cb) {
-        setTimeout(fetch(url, cb), 1500);
+        setTimeout(fetch(url, cb), Math.random() * 20000);
     };
 
     var getProfilePic = function (datum, cb) {
