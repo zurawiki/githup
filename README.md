@@ -7,7 +7,8 @@ Lowell B-23
 GitHup
 ------
 
-http://rozu.co/githup/design.html
+http://rozu.co/githup
+
 https://github.com/rzurawicki/githup
 
 ## Purpose
@@ -28,10 +29,10 @@ jQuery and various plugins are also used
 
 
 ## What's included
-  * design.html - the main webpage
-  |-- js  - javascript (and libraries)
-  |   |---- clfln.js - the node.js backend
-  --- css - stylesheets
+    index.html - the main webpage
+    |-- js  - javascript (and libraries)
+    |   '---- clfln.js - the node.js backend
+    '-- css - stylesheets
 
 ## Functionality
   * Backend in node.js to scrape web data
@@ -46,10 +47,10 @@ jQuery and various plugins are also used
 
 
 ## How to Setup Backend
-  * Install node.js <http://nodejs.org/> (or use homebrew on mac)
-        Run command: node js/clfln.js
-        This script setups up an HTTP server on port 9080.
-        The current website calls this API at cloud.rozu.co
+  1. Install node.js <http://nodejs.org/> (or use homebrew on mac)
+        
+  2. Run command: `node js/clfln.js`
+     This script setups up an HTTP server on port 9080. The current website calls this API at cloud.rozu.co
 
 
 ## Known Bugs
